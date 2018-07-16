@@ -145,7 +145,7 @@ namespace eosio {
          bool filter( const action_trace& act ) {
             if( bypass_filter )
                return true;
-            if( filter_on.find({ act.receipt.receiver, act.act.name, 0 }) != filter_on.end() )
+            if( filter_on.find({ 0, act.act.name, 0 }) != filter_on.end() )
                return true;
             for( const auto& a : act.act.authorization )
                if( filter_on.find({ act.receipt.receiver, act.act.name, a.actor }) != filter_on.end() )
@@ -279,7 +279,7 @@ namespace eosio {
             boost::split(v, s, boost::is_any_of(":"));
             EOS_ASSERT(v.size() == 3, fc::invalid_arg_exception, "Invalid value ${s} for --filter-on", ("s",s));
             filter_entry fe{ v[0], v[1], v[2] };
-            EOS_ASSERT(fe.receiver.value && fe.action.value, fc::invalid_arg_exception, "Invalid value ${s} for --filter-on", ("s",s));
+            EOS_ASSERT(fe.action.value, fc::invalid_arg_exception, "Invalid value ${s} for --filter-on", ("s",s));
             my->filter_on.insert( fe );
          }
       }
